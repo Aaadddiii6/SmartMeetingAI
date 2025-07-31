@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartMeetingAI - Reel Maker</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ url_for('static', filename='css/style.css') }}"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">
+          <i class="fas fa-brain"></i>
+          <h1>SmartMeetingAI</h1>
+        </div>
+        <p class="subtitle">
+          Transform your meeting videos into engaging reels
+        </p>
+      </header>
+
+      <!-- Main Content - Two Cards Side by Side -->
+      <main class="main-content">
+        <div class="cards-container">
+          <!-- Left Card - Video Upload -->
+          <div class="card upload-card" id="uploadCard">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+              </div>
+              <h2>Upload Video</h2>
+            </div>
+
+            <div class="card-content">
+              <div class="upload-area" id="uploadArea">
+                <div class="upload-zone" id="uploadZone">
+                  <div class="upload-icon">
+                    <i class="fas fa-video"></i>
+                  </div>
+                  <h3>Drop your video here</h3>
+                  <p>or click to browse</p>
+                  <span class="file-info"
+                    >Supports: MP4, AVI, MOV, MKV, WMV, FLV, WEBM (Max:
+                    500MB)</span
+                  >
+                </div>
+
+                <input
+                  type="file"
+                  id="videoFile"
+                  name="video"
+                  accept="video/*"
+                  hidden
+                />
+
+                <div
+                  class="file-preview"
+                  id="filePreview"
+                  style="display: none"
+                >
+                  <div class="file-details">
+                    <div class="file-icon">
+                      <i class="fas fa-file-video"></i>
+                    </div>
+                    <div class="file-info">
+                      <h4 id="fileName">Video File</h4>
+                      <span id="fileSize">0 MB</span>
+                    </div>
+                    <button class="remove-file" id="removeFile">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="upload-actions">
+                <button class="btn btn-primary" id="uploadBtn" disabled>
+                  <i class="fas fa-upload"></i>
+                  Upload Video
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Card - Reels Display & Progress -->
+          <div class="card reels-card" id="reelsCard">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-film"></i>
+              </div>
+              <h2>Generated Reels</h2>
+            </div>
+
+            <div class="card-content">
+              <!-- Progress Section -->
+              <div
+                class="progress-section"
+                id="progressSection"
+                style="display: none"
+              >
+                <div class="progress-header">
+                  <h3>Processing Video</h3>
+                  <div class="progress-status" id="progressStatus">
+                    Initializing...
+                  </div>
+                </div>
+
+                <div class="progress-bar-container">
+                  <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                  </div>
+                  <div class="progress-text" id="progressText">0%</div>
+                </div>
+
+                <div class="video-info" id="videoInfo">
+                  <div class="info-item">
+                    <span class="info-label">File Size</span>
+                    <span class="info-value" id="infoSize">-</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Duration</span>
+                    <span class="info-value" id="infoDuration">-</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Format</span>
+                    <span class="info-value" id="infoFormat">-</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Multiple Reel Generation Options -->
+              <div class="reel-options" id="reelOptions" style="display: none">
+                <h3>Generate Multiple Reels</h3>
+
+                <!-- Number of Reels Selection -->
+                <div class="reel-count-selector">
+                  <label for="reelCount"
+                    >How many reels do you want to generate?</label
+                  >
+                  <select id="reelCount" class="form-select">
+                    <option value="1">1 reel</option>
+                    <option value="2">2 reels</option>
+                    <option value="3">3 reels</option>
+                    <option value="4">4 reels</option>
+                  </select>
+                </div>
+
+                <!-- Reel Configurations Container -->
+                <div class="reel-configs-container" id="reelConfigsContainer">
+                  <!-- Individual reel configurations will be added here dynamically -->
+                </div>
+
+                <!-- Add Reel Configuration Button -->
+                <button
+                  class="btn btn-secondary"
+                  id="addReelConfigBtn"
+                  style="display: none"
+                >
+                  <i class="fas fa-plus"></i>
+                  Add Another Reel Configuration
+                </button>
+
+                <button class="btn btn-gradient" id="generateBtn">
+                  <i class="fas fa-magic"></i>
+                  Generate Reels
+                </button>
+              </div>
+
+              <!-- Current Session Reels -->
+              <div class="reels-gallery" id="reelsGallery">
+                <div class="gallery-header">
+                  <h3>Newly Generated Reels</h3>
+                  <div class="gallery-stats">
+                    <span id="reelsCount">0 reels</span>
+                  </div>
+                </div>
+                <div class="reels-grid" id="reelsGrid">
+                  <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">
+                      <i class="fas fa-film"></i>
+                    </div>
+                    <h4>No reels yet</h4>
+                    <p>Upload a video and generate your first reel!</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Past Generated Reels (Collapsible) -->
+              <div class="past-reels-section" id="pastReelsSection">
+                <div class="past-reels-header" id="pastReelsHeader">
+                  <h3>
+                    <i class="fas fa-chevron-down" id="pastReelsIcon"></i>
+                    Past Generated Reels
+                  </h3>
+                  <div class="past-reels-stats">
+                    <span id="pastReelsCount">0 reels</span>
+                  </div>
+                </div>
+                <div
+                  class="past-reels-content"
+                  id="pastReelsContent"
+                  style="display: none"
+                >
+                  <div class="past-reels-grid" id="pastReelsGrid">
+                    <div class="empty-state" id="pastReelsEmptyState">
+                      <div class="empty-icon">
+                        <i class="fas fa-history"></i>
+                      </div>
+                      <h4>No past reels</h4>
+                      <p>Your previously generated reels will appear here</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Cards Row -->
+        <div class="cards-container">
+          <!-- Left Card - Poster Generation -->
+          <div class="card poster-card" id="posterCard">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-image"></i>
+              </div>
+              <h2>Generate Poster</h2>
+            </div>
+
+            <div class="card-content">
+              <div
+                class="poster-section"
+                id="posterSection"
+                style="display: none"
+              >
+                <div class="poster-preview">
+                  <img
+                    id="posterImage"
+                    src=""
+                    alt="Generated Poster"
+                    style="display: none"
+                  />
+                  <div class="poster-placeholder" id="posterPlaceholder">
+                    <i class="fas fa-image"></i>
+                    <p>Poster will appear here</p>
+                  </div>
+                </div>
+                <div class="poster-actions">
+                  <button
+                    class="btn btn-primary"
+                    id="downloadPosterBtn"
+                    style="display: none"
+                  >
+                    <i class="fas fa-download"></i>
+                    Download Poster
+                  </button>
+                </div>
+              </div>
+
+              <div class="poster-empty" id="posterEmpty">
+                <div class="empty-icon">
+                  <i class="fas fa-image"></i>
+                </div>
+                <h4>No poster generated yet</h4>
+                <p>Upload a video to generate a meeting poster!</p>
+                <div class="poster-actions">
+                  <button class="btn btn-gradient" id="generatePosterBtn">
+                    <i class="fas fa-image"></i>
+                    Generate Poster
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Card - Blog Article Generation -->
+          <div class="card blog-card" id="blogCard">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-blog"></i>
+              </div>
+              <h2>Generate Blog Article</h2>
+            </div>
+
+            <div class="card-content">
+              <div class="blog-section" id="blogSection" style="display: none">
+                <div class="blog-preview">
+                  <div class="blog-content" id="blogContent">
+                    <!-- Blog content will be inserted here -->
+                  </div>
+                </div>
+                <div class="blog-actions">
+                  <button
+                    class="btn btn-secondary"
+                    id="editBlogBtn"
+                    style="display: none"
+                  >
+                    <i class="fas fa-edit"></i>
+                    Edit Article
+                  </button>
+                  <button
+                    class="btn btn-primary"
+                    id="postBlogBtn"
+                    style="display: none"
+                  >
+                    <i class="fas fa-share"></i>
+                    Post to Social Media
+                  </button>
+                </div>
+              </div>
+
+              <div class="blog-empty" id="blogEmpty">
+                <div class="empty-icon">
+                  <i class="fas fa-blog"></i>
+                </div>
+                <h4>No blog article generated yet</h4>
+                <p>Upload a video to generate a meeting blog article!</p>
+                <div class="blog-actions">
+                  <button class="btn btn-gradient" id="generateBlogBtn">
+                    <i class="fas fa-blog"></i>
+                    Generate Blog
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>&copy; 2024 SmartMeetingAI. Powered by AI.</p>
+      </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+      </div>
+    </div>
+
+    <!-- Reel Preview Modal -->
+    <div class="modal" id="reelModal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Reel Preview</h3>
+          <button class="modal-close" id="modalClose">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <video id="reelVideo" controls>
+            <source id="reelSource" src="" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="modalCloseBtn">Close</button>
+          <button class="btn btn-primary" id="downloadBtn">
+            <i class="fas fa-download"></i>
+            Download
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </body>
+</html>
