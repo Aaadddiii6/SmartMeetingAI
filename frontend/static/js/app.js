@@ -231,7 +231,7 @@ class SmartMeetingAI {
       this.showLoading(true);
       this.isProcessing = true;
 
-      const response = await fetch("/upload", {
+      const response = await fetch("/api/upload", {
         method: "POST",
         body: formData,
       });
@@ -437,7 +437,7 @@ class SmartMeetingAI {
         console.log("Reels gallery hidden");
       }
 
-      const response = await fetch("/generate-reels", {
+      const response = await fetch("/api/generate-reels", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -488,7 +488,7 @@ class SmartMeetingAI {
       );
 
       try {
-        const response = await fetch(`/status/${fileId}`);
+        const response = await fetch(`/api/status/${fileId}`);
         if (!response.ok) {
           throw new Error(`Status check failed: ${response.status}`);
         }
@@ -784,7 +784,7 @@ class SmartMeetingAI {
     this.showLoading(true);
     try {
       // Always generate transcript first (idempotent)
-      const transcriptRes = await fetch("/generate-transcript", {
+      const transcriptRes = await fetch("/api/generate-transcript", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ file_id: fileId }),
@@ -793,7 +793,7 @@ class SmartMeetingAI {
       if (!transcriptData.success) throw new Error(transcriptData.message);
 
       // Now generate poster
-      const posterRes = await fetch("/generate-poster", {
+      const posterRes = await fetch("/api/generate-poster", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ file_id: fileId }),
@@ -817,7 +817,7 @@ class SmartMeetingAI {
     this.showLoading(true);
     try {
       // Always generate transcript first (idempotent)
-      const transcriptRes = await fetch("/generate-transcript", {
+      const transcriptRes = await fetch("/api/generate-transcript", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ file_id: fileId }),
@@ -826,7 +826,7 @@ class SmartMeetingAI {
       if (!transcriptData.success) throw new Error(transcriptData.message);
 
       // Now generate blog
-      const blogRes = await fetch("/generate-blog", {
+      const blogRes = await fetch("/api/generate-blog", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ file_id: fileId }),

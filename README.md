@@ -1,46 +1,39 @@
-# SmartMeetingAI - Reel Maker Module
+# SmartMeetingAI - Module (X) Routes
 
-Transform your meeting videos into engaging reels using AI-powered video processing.
+A comprehensive AI-powered meeting analysis and content generation platform that transforms meeting videos into reels, transcripts, posters, and blog articles.
 
 ## 🚀 Features
 
-- **Video Upload**: Support for multiple video formats (MP4, AVI, MOV, MKV, WMV, FLV, WEBM)
-- **AI-Powered Processing**: Automatic highlight detection and reel generation
-- **Customizable Reels**: Choose duration (15s, 30s, 45s, 60s) and style
-- **Real-time Progress**: Live status updates during processing
-- **Download & Preview**: View and download generated reels
-- **Responsive Design**: Works on desktop and mobile devices
-
-## 🏗️ Architecture
-
-- **Backend**: Flask (Python)
-- **Task Queue**: Celery + Redis
-- **Video Processing**: Pictory API (AI-powered)
-- **Storage**: Local file system (expandable to cloud)
-- **Frontend**: HTML/CSS/JavaScript (Vanilla)
+- **Video Upload & Processing**: Upload meeting videos and process them for content generation
+- **AI-Powered Transcript Generation**: Convert speech to text using AssemblyAI
+- **Smart Reel Creation**: Generate engaging social media reels using QuickReel API
+- **Professional Poster Generation**: Create meeting posters using multiple AI services (OpenAI, Stability AI, RunwayML)
+- **Blog Article Generation**: Transform meeting content into comprehensive blog articles
+- **Multi-Platform Support**: Generate content optimized for Instagram, TikTok, YouTube, and Facebook
 
 ## 📁 Project Structure
 
 ```
-/smartmeetingai/
-├── app.py                 # Flask application & routes
-├── celery_worker.py       # Background task processing
-├── config.py             # Configuration settings
-├── requirements.txt      # Python dependencies
-├── README.md            # This file
-├── .env                 # Environment variables (create this)
-├── /static             # Static files (CSS, JS, reels)
-│   ├── css/style.css
-│   ├── js/app.js
-│   └── reels/          # Generated reels storage
-├── /templates          # HTML templates
-│   └── index.html
-├── /uploads            # Uploaded videos storage
-├── /services           # Business logic services
-│   ├── __init__.py
-│   ├── file_manager.py # File operations & metadata
-│   └── pictory_api.py  # Pictory API integration
-└── tasks.json          # Task tracking data
+Module_(X)_Routes/
+├── backend/
+│   ├── .env                    # Environment variables (NEVER commit)
+│   ├── db.py                   # Database connection handler
+│   ├── main.py                 # Main Flask application with API routes
+│   ├── requirements.txt        # Python dependencies
+│   └── utils/                  # Business logic and helper functions
+│       ├── file_manager.py     # File handling utilities
+│       ├── video_processor.py  # Video processing logic
+│       ├── transcript_service.py # Transcript generation
+│       ├── poster_service.py   # Poster generation
+│       ├── blog_service.py     # Blog article generation
+│       ├── reel_service.py     # Reel generation
+│       ├── openai_service.py   # OpenAI API integration
+│       ├── assemblyai_service.py # AssemblyAI API integration
+│       ├── quickreel_api.py    # QuickReel API integration
+│       └── runwayml_service.py # RunwayML API integration
+├── frontend/                   # Frontend files (HTML, CSS, JS)
+├── API_DOCUMENTATION.md        # Comprehensive API documentation
+└── .gitignore                  # Git ignore rules
 ```
 
 ## 🛠️ Setup Instructions
@@ -48,224 +41,224 @@ Transform your meeting videos into engaging reels using AI-powered video process
 ### Prerequisites
 
 - Python 3.8+
-- Redis server
-- Pictory API key (optional for testing)
+- pip (Python package manager)
+- Git
 
-### 1. Clone and Install
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/your-username/module-2-routes.git
+   cd module-2-routes
+   ```
+
+2. **Set up the backend**
+
+   ```bash
+   cd backend
+
+   # Create virtual environment
+   python -m venv venv
+
+   # Activate virtual environment
+   # On Windows:
+   venv\Scripts\activate
+   # On macOS/Linux:
+   source venv/bin/activate
+
+   # Install dependencies
+   pip install -r requirements.txt
+   ```
+
+3. **Configure environment variables**
+
+   Create a `.env` file in the `backend/` directory with your API keys:
+
+   ```env
+   # Flask Configuration
+   SECRET_KEY=your_secret_key_here
+   DEBUG=True
+
+   # API Keys (get these from respective services)
+   QUICKREEL_API_KEY=your_quickreel_api_key_here
+   ASSEMBLYAI_API_KEY=your_assemblyai_api_key_here
+   OPENAI_API_KEY=your_openai_api_key_here
+   RUNWAYML_API_KEY=your_runwayml_api_key_here
+   STABILITYAI_API_KEY=your_stabilityai_api_key_here
+
+   # Additional configuration
+   UPLOAD_FOLDER=uploads
+   MAX_CONTENT_LENGTH=524288000
+   ```
+
+4. **Run the application**
+
+   ```bash
+   # From the backend directory
+   python main.py
+   ```
+
+5. **Access the application**
+   - Open your browser and go to `http://localhost:5000`
+   - The API will be available at `http://localhost:5000/api/`
+
+## 🔑 Required API Keys
+
+You'll need to obtain API keys from the following services:
+
+### Essential APIs
+
+- **AssemblyAI**: For transcript generation
+- **OpenAI**: For blog and poster generation
+- **QuickReel**: For reel generation
+
+### Optional APIs (for enhanced features)
+
+- **Stability AI**: For better poster generation (recommended over DALL-E)
+- **RunwayML**: For alternative poster generation
+- **Canva API**: For template-based poster generation
+
+## 📚 API Documentation
+
+For detailed API documentation, including all endpoints, input/output types, and examples, see [API_DOCUMENTATION.md](API_DOCUMENTATION.md).
+
+## 🧪 Testing
+
+### Running Tests
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd SmartMeetingAI
-
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# Windows:
-venv\Scripts\activate
-# macOS/Linux:
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
+cd backend
+python -m pytest tests/
 ```
 
-### 2. Environment Configuration
-
-Create a `.env` file in the root directory:
-
-```env
-# Flask Configuration
-SECRET_KEY=your-secret-key-here
-DEBUG=True
-
-# Celery Configuration
-CELERY_BROKER_URL=redis://localhost:6379/0
-CELERY_RESULT_BACKEND=redis://localhost:6379/0
-
-# Pictory API (add when you get the key)
-PICTORY_API_KEY=your-pictory-api-key
-PICTORY_API_URL=https://api.pictory.ai
-
-# Storage Configuration
-STORAGE_BACKEND=local
-```
-
-### 3. Start Redis
+### Test Coverage
 
 ```bash
-# Windows (if using WSL or Docker)
-redis-server
-
-# macOS (using Homebrew)
-brew services start redis
-
-# Linux
-sudo systemctl start redis
+python -m pytest --cov=utils tests/
 ```
 
-### 4. Run the Application
+## 🚀 Usage
 
-Open **three terminal windows** and run these commands:
+### 1. Upload a Meeting Video
 
-**Terminal 1 - Flask Server:**
-
-```bash
-python app.py
-```
-
-**Terminal 2 - Celery Worker:**
-
-```bash
-celery -A celery_worker.celery worker --loglevel=info
-```
-
-**Terminal 3 - Celery Beat (optional, for scheduled tasks):**
-
-```bash
-celery -A celery_worker.celery beat --loglevel=info
-```
-
-### 5. Access the Application
-
-Open your browser and go to: `http://localhost:5000`
-
-## 🎯 Usage Guide
-
-### 1. Upload Video
-
-- Click "Choose Video File" or drag & drop
+- Use the web interface or make a POST request to `/api/upload`
 - Supported formats: MP4, AVI, MOV, MKV, WMV, FLV, WEBM
 - Maximum file size: 500MB
 
-### 2. Configure Reel Settings
+### 2. Generate Transcript
 
-- **Duration**: 15, 30, 45, or 60 seconds
-- **Style**: Professional, Casual, Energetic, Calm, Modern, Classic
+- Make a POST request to `/api/generate-transcript` with the file_id
+- Get detailed transcript with timestamps and confidence scores
 
-### 3. Generate Reel
+### 3. Generate Reels
 
-- Click "Generate Reel"
-- Watch real-time progress updates
-- Processing typically takes 2-5 minutes
+- Make a POST request to `/api/generate-reels` with reel configurations
+- Choose duration, platforms, and styling options
+- Monitor progress with `/api/status/<task_id>`
 
-### 4. Download & Share
+### 4. Generate Posters
 
-- Preview the generated reel
-- Download to your device
-- Generate additional reels from the same video
+- Make a POST request to `/api/generate-poster`
+- Automatically uses the best available AI service
+- Supports multiple AI providers for optimal results
 
-## 🔧 API Endpoints
+### 5. Generate Blog Articles
 
-| Method | Endpoint            | Description               |
-| ------ | ------------------- | ------------------------- |
-| `GET`  | `/`                 | Homepage with upload form |
-| `POST` | `/upload`           | Upload video file         |
-| `POST` | `/generate-reel`    | Start reel generation     |
-| `GET`  | `/status/<file_id>` | Check processing status   |
-| `GET`  | `/video/<file_id>`  | Serve uploaded video      |
-| `GET`  | `/reel/<file_id>`   | Serve generated reel      |
-| `GET`  | `/tasks`            | List all tasks (debug)    |
+- Make a POST request to `/api/generate-blog`
+- Creates comprehensive, professional blog articles
+- Includes industry insights and strategic analysis
 
-## 🧪 Testing Without Pictory API
+## 🔧 Development
 
-The application includes a **mock mode** that works without the Pictory API key:
+### Adding New Features
 
-- Upload any video file
-- Processing will simulate with mock data
-- Generated "reels" will be dummy files
-- Perfect for testing the UI and workflow
+1. Create new utility files in `backend/utils/`
+2. Add corresponding API endpoints in `backend/main.py`
+3. Write unit tests for new functionality
+4. Update API documentation
 
-## 🔄 Development Workflow
+### Code Style
 
-### Adding Real Pictory API Integration
+- Follow PEP 8 Python style guidelines
+- Use type hints for all function parameters and return values
+- Write comprehensive docstrings for all functions
+- Include input/output type documentation
 
-When you get your Pictory API key:
+### Testing Requirements
 
-1. Add the key to your `.env` file
-2. The application will automatically switch from mock to real API
-3. No code changes needed - it's already implemented!
+- All utility functions must have unit tests
+- Test files should be placed in `backend/tests/`
+- Maintain at least 80% code coverage
 
-### Customizing Styles and Durations
+## 🏗️ Architecture
 
-Edit `services/pictory_api.py`:
+### Backend Architecture
 
-```python
-def get_available_styles(self) -> list:
-    return ["professional", "casual", "energetic", "calm", "modern", "classic"]
+- **Flask**: Web framework for API endpoints
+- **Modular Design**: Clean separation of concerns with utility modules
+- **Background Processing**: Threading for long-running tasks
+- **File-based Storage**: JSON files for task data (can be upgraded to database)
 
-def get_duration_options(self) -> list:
-    return [15, 30, 45, 60]
-```
+### Service Integration
 
-## 🚀 Deployment
+- **AssemblyAI**: Speech-to-text transcription
+- **OpenAI**: Content generation and image creation
+- **QuickReel**: Video reel generation
+- **Multiple AI Services**: Fallback options for poster generation
 
-### Local Development
+## 🔒 Security
 
-- Use the setup instructions above
-- Redis must be running
-- All files stored locally
+- API keys are stored in environment variables (never committed to Git)
+- File upload validation and sanitization
+- Input validation on all API endpoints
+- Error messages don't expose sensitive information
 
-### Production Deployment
+## 📈 Performance
 
-- Use a production WSGI server (Gunicorn)
-- Set up Redis on a separate server
-- Configure cloud storage (Supabase/Google Drive)
-- Set `DEBUG=False` in environment
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**Redis Connection Error:**
-
-```bash
-# Check if Redis is running
-redis-cli ping
-# Should return: PONG
-```
-
-**Celery Worker Not Starting:**
-
-```bash
-# Make sure you're in the project directory
-# Check if Redis is accessible
-celery -A celery_worker.celery inspect active
-```
-
-**File Upload Fails:**
-
-- Check file size (max 500MB)
-- Verify file format is supported
-- Ensure `/uploads` directory exists
-
-**Processing Stuck:**
-
-- Check Celery worker logs
-- Verify Redis connection
-- Restart Celery worker if needed
-
-## 📝 License
-
-This project is licensed under the MIT License.
+- Background processing for long-running tasks
+- Threading for concurrent operations
+- Efficient file handling and storage
+- Graceful handling of API rate limits
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📞 Support
+### Development Guidelines
 
-For issues and questions:
+- Write unit tests for all new functionality
+- Update API documentation for new endpoints
+- Follow the existing code structure and patterns
+- Ensure all tests pass before submitting PR
 
-- Check the troubleshooting section
-- Review the logs in terminal windows
-- Create an issue in the repository
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+For support and questions:
+
+- Check the [API Documentation](API_DOCUMENTATION.md)
+- Review existing issues on GitHub
+- Create a new issue with detailed information
+
+## 🔮 Future Roadmap
+
+- [ ] Database integration (PostgreSQL/MongoDB)
+- [ ] User authentication and authorization
+- [ ] Real-time WebSocket updates
+- [ ] Mobile application
+- [ ] Advanced analytics and reporting
+- [ ] Integration with more AI services
+- [ ] Cloud storage integration
+- [ ] Advanced video processing features
 
 ---
 
-**Note**: This is a development version. The Pictory API integration will be fully functional once you receive your API key.
+**Note**: This project is designed for educational and professional use. Ensure you comply with all API service terms and conditions when using this application.

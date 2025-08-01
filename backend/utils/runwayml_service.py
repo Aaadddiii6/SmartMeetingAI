@@ -162,7 +162,7 @@ class RunwayMLService:
         
         # Create a mock poster file
         poster_filename = f"runwayml_poster_{int(time.time())}.jpg"
-        poster_path = os.path.join('static', 'posters', poster_filename)
+        poster_path = os.path.join('frontend', 'static', 'posters', poster_filename)
         
         # Ensure directory exists
         os.makedirs(os.path.dirname(poster_path), exist_ok=True)
